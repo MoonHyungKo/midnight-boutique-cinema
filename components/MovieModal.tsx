@@ -48,7 +48,7 @@ export default function MovieModal({ movie, onClose }: { movie: Movie | null, on
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-5xl max-h-[90vh] md:max-h-none overflow-y-auto md:overflow-hidden glass rounded-3xl flex flex-col md:flex-row shadow-[0_0_50px_rgba(0,0,0,0.8)] z-50"
+            className="relative w-full max-w-5xl max-h-[90vh] md:max-h-none overflow-y-auto no-scrollbar md:overflow-hidden glass rounded-3xl flex flex-col md:flex-row shadow-[0_0_50px_rgba(0,0,0,0.8)] z-50"
           >
             {/* Close Button - Optimized for Mobile */}
             <button 
@@ -59,7 +59,7 @@ export default function MovieModal({ movie, onClose }: { movie: Movie | null, on
             </button>
 
             {/* Poster / Video Area */}
-            <div className="w-full md:w-1/2 p-4 md:p-8 flex items-center bg-black/20 shrink-0">
+            <div className="w-full md:w-1/2 px-5 py-4 md:p-8 flex items-center justify-center bg-black/20 shrink-0">
               <VideoPlayer url={movie.url} poster={movie.poster} />
             </div>
 
@@ -69,7 +69,7 @@ export default function MovieModal({ movie, onClose }: { movie: Movie | null, on
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
-                className="custom-scrollbar"
+                className="no-scrollbar"
               >
                 <div className="flex items-center gap-2 text-accent mb-4">
                   <Film className="w-4 h-4" />
