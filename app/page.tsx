@@ -61,7 +61,7 @@ export default function EntrancePage() {
             className="text-accent text-xs md:text-sm font-medium mb-6 flex items-center justify-center gap-3 uppercase"
           >
             <div className="h-[1px] w-8 bg-accent/40" />
-            Midnight Boutique Cinema
+            DANA'S ARCHIVE
             <div className="h-[1px] w-8 bg-accent/40" />
           </motion.div>
           

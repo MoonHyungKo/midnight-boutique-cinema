@@ -31,7 +31,7 @@ export default function AdminPage() {
   // 신규 영화 폼 상태
   const [newMovie, setNewMovie] = useState({
     title: "",
-    director: "Midnight Aesthetic Team",
+    director: "Dana's Archive Team",
     cast: "Dana & Me",
     plot: "",
     url: "",
@@ -112,7 +112,7 @@ export default function AdminPage() {
         setSuccessMessage("Movie registered successfully!");
         setNewMovie({
           title: "",
-          director: "Midnight Aesthetic Team",
+          director: "Dana's Archive Team",
           cast: "Dana & Me",
           plot: "",
           url: "",

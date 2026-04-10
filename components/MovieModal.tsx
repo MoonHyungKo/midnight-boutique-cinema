@@ -111,8 +111,8 @@ export default function MovieModal({ movie, onClose }: { movie: Movie | null, on
 
                 <div className="mt-8 md:mt-12 flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                  <p className="text-accent text-xs md:text-sm font-medium tracking-wide">
-                    Enjoy the premium boutique experience
+                  <p className="text-accent text-xs md:text-sm font-medium tracking-wide font-serif">
+                    Бақыт кішкентай нәрседе
                   </p>
                 </div>
               </motion.div>

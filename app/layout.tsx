@@ -9,14 +9,14 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Midnight Boutique Cinema | A Private Lounge for Dana",
+  title: "DANA'S ARCHIVE | A Private Lounge",
   description: "The world's most romantic private cinema for Dana. Enjoy beautiful stories with aesthetic cinematic visuals.",
   keywords: ["Cinema", "Romantic", "Dana", "Movie lounge", "Aesthetic", "Boutique"],
   openGraph: {
-    title: "Midnight Boutique Cinema",
+    title: "DANA'S ARCHIVE",
     description: "A special movie lounge prepared exclusively for Dana",
     url: "https://dana-cinema.vercel.app",
-    siteName: "Midnight Cinema",
+    siteName: "DANA'S ARCHIVE",
     locale: "en_US",
     type: "website",
   },
