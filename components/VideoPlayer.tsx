@@ -22,7 +22,7 @@ export default function VideoPlayer({ url, poster }: VideoPlayerProps) {
   const driveEmbedUrl = (() => {
     const match = url.match(/(?:\/d\/|id=)([\w-]+)/);
     if (match && (url.includes("drive.google.com") || url.includes("docs.google.com"))) {
-      return `https://drive.google.com/file/d/${match[1]}/preview?autoplay=1`;
+      return `https://drive.google.com/file/d/${match[1]}/preview`;
     }
     return null;
   })();
