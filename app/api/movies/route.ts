@@ -41,6 +41,26 @@ export async function POST(request: NextRequest) {
   }
 }
 
+export async function PUT(request: NextRequest) {
+  try {
+    const updatedMovie = await request.json();
+    const movies = await getMovies();
+    
+    const index = movies.findIndex((m: any) => m.id === updatedMovie.id);
+    if (index === -1) {
+      return NextResponse.json({ error: "Movie not found" }, { status: 404 });
+    }
+    
+    movies[index] = { ...movies[index], ...updatedMovie };
+    await saveMovies(movies);
+    
+    return NextResponse.json(movies[index]);
+  } catch (error) {
+    console.error("Update Error:", error);
+    return NextResponse.json({ error: "Failed to update movie" }, { status: 500 });
+  }
+}
+
 export async function DELETE(request: NextRequest) {
   try {
     const { id } = await request.json();

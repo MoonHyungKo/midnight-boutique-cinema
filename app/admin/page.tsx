@@ -15,7 +15,9 @@ import {
   Lock,
   Loader2,
   CheckCircle2,
-  Home
+  Home,
+  Pencil,
+  X
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -28,8 +30,11 @@ export default function AdminPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
-  // 신규 영화 폼 상태
-  const [newMovie, setNewMovie] = useState({
+  const [successMessage, setSuccessMessage] = useState("");
+  const [editingId, setEditingId] = useState<number | null>(null);
+
+  // 신규/수정 영화 폼 상태
+  const [newMovie, setNewMovie] = useState<any>({
     title: "",
     director: "Dana's Archive Team",
     cast: "Dana & Me",
@@ -101,25 +106,19 @@ export default function AdminPage() {
         return;
       }
 
-      // 2. 영화 데이터 저장
+      // 2. 영화 데이터 저장 (생성 또는 수정)
+      const method = editingId ? "PUT" : "POST";
+      const bodyData = editingId ? { ...newMovie, id: editingId, poster: posterUrl } : { ...newMovie, poster: posterUrl };
+      
       const res = await fetch("/api/movies", {
-        method: "POST",
+        method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...newMovie, poster: posterUrl })
+        body: JSON.stringify(bodyData)
       });
 
       if (res.ok) {
-        setSuccessMessage("Movie registered successfully!");
-        setNewMovie({
-          title: "",
-          director: "Dana's Archive Team",
-          cast: "Dana & Me",
-          plot: "",
-          url: "",
-          poster: ""
-        });
-        setSelectedFile(null);
-        setPreviewUrl("");
+        setSuccessMessage(editingId ? "Movie updated successfully!" : "Movie registered successfully!");
+        handleCancelEdit();
         fetchMovies();
         setTimeout(() => setSuccessMessage(""), 3000);
       }
@@ -129,6 +128,35 @@ export default function AdminPage() {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleEditClick = (movie: any) => {
+    setEditingId(movie.id);
+    setNewMovie({
+      title: movie.title,
+      director: movie.director,
+      cast: movie.cast,
+      plot: movie.plot,
+      url: movie.url,
+      poster: movie.poster
+    });
+    setPreviewUrl(movie.poster);
+    setSelectedFile(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setNewMovie({
+      title: "",
+      director: "Dana's Archive Team",
+      cast: "Dana & Me",
+      plot: "",
+      url: "",
+      poster: ""
+    });
+    setSelectedFile(null);
+    setPreviewUrl("");
   };
 
   const handleDelete = async (id: number) => {
@@ -211,11 +239,21 @@ export default function AdminPage() {
       <div className="max-w-7xl mx-auto px-6 md:px-20 mt-12 grid grid-cols-1 lg:grid-cols-2 gap-16">
         {/* Registration Form */}
         <section>
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 bg-accent/20 rounded-xl flex items-center justify-center">
-              <Plus className="text-accent w-5 h-5" />
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-accent/20 rounded-xl flex items-center justify-center">
+                {editingId ? <Pencil className="text-accent w-5 h-5" /> : <Plus className="text-accent w-5 h-5" />}
+              </div>
+              <h2 className="text-2xl font-serif text-white">{editingId ? "Edit Movie" : "Register New Movie"}</h2>
             </div>
-            <h2 className="text-2xl font-serif text-white">Register New Movie</h2>
+            {editingId && (
+              <button 
+                onClick={handleCancelEdit}
+                className="text-white/40 hover:text-white text-sm flex items-center gap-1 transition-colors bg-white/5 px-3 py-1.5 rounded-lg"
+              >
+                <X className="w-4 h-4" /> Cancel
+              </button>
+            )}
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8 glass p-8 md:p-10 rounded-3xl">
@@ -320,10 +358,10 @@ export default function AdminPage() {
             <button 
               disabled={isSaving}
               type="submit"
-              className="w-full bg-accent text-black font-semibold py-5 rounded-2xl hover:bg-accent/90 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+              className="w-full bg-accent text-black font-semibold py-5 rounded-2xl hover:bg-accent/90 transition-all flex items-center justify-center gap-3 disabled:opacity-50 mt-4"
             >
               {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
-              {isSaving ? "Saving..." : "Upload Movie"}
+              {isSaving ? "Saving..." : (editingId ? "Update Movie" : "Upload Movie")}
             </button>
             
             <AnimatePresence>
@@ -372,15 +410,26 @@ export default function AdminPage() {
                        <span className="text-[10px] text-accent/60 uppercase tracking-widest border border-accent/20 px-2 py-0.5 rounded">Active</span>
                     </div>
                   </div>
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(movie.id);
-                    }}
-                    className="relative z-10 w-10 h-10 rounded-full flex items-center justify-center text-white/20 hover:text-red-500 hover:bg-red-500/10 transition-colors"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
+                  <div className="flex items-center gap-2 relative z-10">
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditClick(movie);
+                      }}
+                      className="w-10 h-10 rounded-full flex items-center justify-center text-white/20 hover:text-accent hover:bg-accent/10 transition-colors"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(movie.id);
+                      }}
+                      className="w-10 h-10 rounded-full flex items-center justify-center text-white/20 hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
                 </motion.div>
               ))}
               {movies.length === 0 && (
